@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
     "build:ui": "rm -rf dist && cd ../Front-end && npm run build && cp -r dist ../Back-end",
-    "deploy:ui": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "deploy:ui": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "test":"node --test"
   },
   "author": "",
   "license": "ISC",
