@@ -99,6 +99,25 @@ test('unique identifier property of blog posts is named id', async () => {
     })
 })
 
+test('a valid blog can be added', async () => {
+    const newBlog = {
+        title: "New blog",
+        author: "New author",
+        url: "https://reactpatterns.com/",
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await Blog.find({})
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length + 1)
+
+    assert(blogsAtEnd.map(blog => blog.title).includes('New blog'))
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
