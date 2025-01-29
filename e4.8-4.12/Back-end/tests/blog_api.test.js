@@ -104,6 +104,7 @@ test('a valid blog can be added', async () => {
         title: "New blog",
         author: "New author",
         url: "https://reactpatterns.com/",
+        likes: 0
     }
 
     await api
