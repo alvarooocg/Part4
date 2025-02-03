@@ -45,4 +45,19 @@ blogsRouter.put('/:id', (request, response, next) => {
      .catch(err => next(err))
 })
 
+blogsRouter.delete(':/id', (request, response, next) => {
+  const body = request.body
+
+  const blog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  }
+
+  Blog.findByIdAndDelete(request.params.id, blog)
+    .then(console.log("Blog: %s", request.params.id))
+    .catch(err => next(err))
+})
+
 module.exports = blogsRouter
