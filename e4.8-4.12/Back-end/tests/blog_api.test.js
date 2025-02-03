@@ -119,6 +119,18 @@ test('a valid blog can be added', async () => {
     assert(blogsAtEnd.map(blog => blog.title).includes('New blog'))
 })
 
+test('likes is property is missing from the request, it will default to the value 0', async () => { 
+  await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+    .expect((response) => {
+      response.body.forEach(blog => {
+        blog.likes !== undefined ? blog.likes : 0
+      })
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
