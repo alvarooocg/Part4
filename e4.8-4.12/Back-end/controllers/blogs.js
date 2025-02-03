@@ -21,6 +21,10 @@ blogsRouter.get('/:id', (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
     const blog = new Blog(request.body)
 
+    if (!blog.title || !blog.url) {
+        return response.status(400).json({ error: 'Title or url missing' })
+    }
+
     const newBlog = await blog.save()
     response.status(201).json(newBlog)
 })

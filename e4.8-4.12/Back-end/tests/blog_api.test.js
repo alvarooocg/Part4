@@ -131,6 +131,19 @@ test('likes is property is missing from the request, it will default to the valu
     })
 })
 
+test('if title and url properties are missing from the request data, the backend responds to the request with status code 400 Bad Request', async () => {
+    const newBlog = {
+      author: "New author",
+      url: "https://reactpatterns.com/",
+      likes: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
