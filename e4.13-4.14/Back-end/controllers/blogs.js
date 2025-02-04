@@ -45,7 +45,7 @@ blogsRouter.put('/:id', (request, response, next) => {
      .catch(err => next(err))
 })
 
-blogsRouter.delete(':/id', (request, response, next) => {
+blogsRouter.delete('/:id', (request, response, next) => {
   const body = request.body
 
   const blog = {
@@ -56,7 +56,7 @@ blogsRouter.delete(':/id', (request, response, next) => {
   }
 
   Blog.findByIdAndDelete(request.params.id, blog)
-    .then(console.log("Blog: %s", request.params.id))
+    .then(response.json(blog))
     .catch(err => next(err))
 })
 

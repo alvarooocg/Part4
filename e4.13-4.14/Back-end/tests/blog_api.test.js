@@ -144,6 +144,14 @@ test('if title and url properties are missing from the request data, the backend
       .expect(400)
 })
 
+test('if client want to delete a blog', async () => {
+    const deleteBlogId = '5a422a851b54a676234d17f7'  
+
+    await api
+      .delete(`/api/blogs/${deleteBlogId}`)
+      .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
