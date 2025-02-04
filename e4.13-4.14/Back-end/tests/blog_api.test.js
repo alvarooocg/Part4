@@ -152,6 +152,20 @@ test('if client want to delete a blog', async () => {
       .expect('Content-Type', /application\/json/)
 })
 
+test('if client want to edit a blog', async () => {
+    const editedBlog = {
+      _id: "5a422a851b54a676234d17f7",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 7
+    }
+
+    await api 
+      .put(`/api/blogs/${editedBlog._id}`, editedBlog)
+      .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })

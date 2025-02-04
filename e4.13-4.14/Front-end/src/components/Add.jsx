@@ -1,7 +1,7 @@
 import CloseIcon from '../assets/close_icon.svg'
 
-const Add = ({ newTitle, handleTitleChange, newAuthor, handleAuthorChange, newUrl, handleUrlChange, addBlog, showAddDisplay, showDisplay }) => {
-    if (showDisplay === true) {
+const Add = ({ newTitle, handleTitleChange, newAuthor, handleAuthorChange, newUrl, handleUrlChange, addBlog, showAddDisplay, toShowAddDisplay }) => {
+    if (toShowAddDisplay === true) {
         return (
             <div className="add__container">
                     <div className="add__display">
@@ -26,7 +26,7 @@ const Add = ({ newTitle, handleTitleChange, newAuthor, handleAuthorChange, newUr
                                     onChange={handleAuthorChange} />
                         </div>
                         <div className="form__div">
-                            <p className="form__paragraph">Blog URL</p>
+                            <p className="form__paragraph">URL</p>
                             <input type="url" className="form__input" required
                                     placeholder='Insert the url...'
                                     value={newUrl}
@@ -40,7 +40,7 @@ const Add = ({ newTitle, handleTitleChange, newAuthor, handleAuthorChange, newUr
                 </div>
             </div>
         )
-    } else if(showAddDisplay === true) {
+    } else if(toShowAddDisplay === true) {
         return null
     }
 }
