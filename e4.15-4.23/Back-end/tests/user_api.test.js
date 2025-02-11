@@ -1,9 +1,14 @@
 const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
-
+const supertest = require('supertest')
 const bcrypt = require('bcrypt')
+const app = require('../app')
+const helper = require('./test_helper.test')
+
 const User = require('../models/user')
+
+const api = supertest(app)
 
 describe('when there is initially one user in db', () => {
     beforeEach(async () => {
@@ -35,6 +40,21 @@ describe('when there is initially one user in db', () => {
     
         const usernames = usersAtEnd.map(u => u.username)
         assert(usernames.includes(newUser.username))
+    })
+
+    test('creation fails with proper statuscode and message if username already taken', async () => {
+    
+        const newUser = {
+          username: 'mluukkai',
+          name: 'Superuser',
+          password: 'salainen'
+        }
+
+        await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
     })
 })
 
