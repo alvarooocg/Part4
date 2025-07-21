@@ -5,7 +5,12 @@ const blogSchema = new mongoose.Schema({
     title: String,
     author: String,
     url: String,
-    likes: Number
+    likes: Number,
+    user: {
+        required: [true, 'User is required'],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
   
   blogSchema.set('toJSON', {
@@ -13,6 +18,14 @@ const blogSchema = new mongoose.Schema({
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
+
+        if (returnedObject.user && typeof returnedObject.user === 'object') {
+            returnedObject.user = {
+                id: returnedObject.user._id,
+                username: returnedObject.user.username,
+                name: returnedObject.user.name
+            }
+        }
     }
 })
 

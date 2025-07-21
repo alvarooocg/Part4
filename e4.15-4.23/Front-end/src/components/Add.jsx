@@ -1,4 +1,4 @@
-import CloseIcon from '../assets/close_icon.svg'
+            import CloseIcon from '../assets/close_icon.svg'
 
 const Add = ({ newTitle, handleTitleChange, newAuthor, handleAuthorChange, newUrl, handleUrlChange, addBlog, showAddDisplay, toShowAddDisplay }) => {
     if (toShowAddDisplay === true) {

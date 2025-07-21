@@ -1,9 +1,9 @@
 const blogsRouter = require('express').Router()
-const { response } = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})    
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })    
   response.json(blogs)
 })
   
@@ -20,14 +20,36 @@ blogsRouter.get('/:id', (request, response, next) => {
 })
   
 blogsRouter.post('/', async (request, response, next) => {
-    const blog = new Blog(request.body)
+  const body = request.body
+
+  try {
+    const user = await User.findById(body.user.userId)
+    // console.log(body.user.userId)
+    if (!user) {
+      return response.status(400).json({ error: 'User not found' })
+    }
+
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes ? body.likes : 0,
+      user: user._id // Asignar solo el ObjectId del usuario
+    })
 
     if (!blog.title || !blog.url) {
-        return response.status(400).json({ error: 'Title or url missing' })
+      return response.status(400).json({ error: 'Title or url missing' })
     }
 
     const newBlog = await blog.save()
-    response.status(201).json(newBlog)
+    user.blogs = user.blogs.concat(newBlog._id) // Agregar el ObjectId del blog al usuario
+    await user.save()
+
+    const populatedBlog = await Blog.findById(newBlog._id).populate('user', { username: 1, name: 1, id: 1 })
+    response.status(201).json(populatedBlog)
+  } catch (err) {
+    next(err)
+  }
 })
   
 blogsRouter.put('/:id', (request, response, next) => {
@@ -40,7 +62,7 @@ blogsRouter.put('/:id', (request, response, next) => {
      likes: body.likes
    }
  
-   Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+   Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 })  
      .then(updatedBlog => response.json(updatedBlog))
      .catch(err => next(err))
 })
