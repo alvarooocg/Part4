@@ -3,7 +3,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })    
+  const blogs = await Blog.find({}).populate('user')    
   response.json(blogs)
 })
   
@@ -23,7 +23,7 @@ blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
   try {
-    const user = await User.findById(body.user.userId)
+    const user = await User.findById("67b2e7d9e6c543b5a5d69b78")
     // console.log(body.user.userId)
     if (!user) {
       return response.status(400).json({ error: 'User not found' })
