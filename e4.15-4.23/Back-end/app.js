@@ -27,10 +27,15 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
+// El extractor de token debe ir antes de los routers que lo usan
+app.use(middleware.tokenExtractor)
+
+// Routers
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
+// Middlewares para endpoints desconocidos y errores
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
