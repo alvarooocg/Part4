@@ -1,6 +1,7 @@
+const middleware = require('../utils/middleware')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
+// const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const { error } = require('../utils/logger')
 
@@ -20,20 +21,8 @@ blogsRouter.get('/:id', (request, response, next) => {
      })
      .catch(err => next(err))
 })
-
-/*
-
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
-*/
   
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
   const body = request.body
 
   try {
@@ -42,11 +31,7 @@ blogsRouter.post('/', async (request, response, next) => {
       return response.status(401).json({ error: 'token invalid' })
     }
 
-    const user = await User.findById(decodedToken.id)
-    // console.log(body.user.userId)
-    if (!user) {
-      return response.status(400).json({ error: 'User not found' })
-    }
+    const user = request.user
 
     const blog = new Blog({
       title: body.title,
@@ -86,7 +71,7 @@ blogsRouter.put('/:id', (request, response, next) => {
      .catch(err => next(err))
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response, next) => {
   const body = request.body
 
   try {
@@ -95,10 +80,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
       return response.status(400).json({ error: "token invalid" })
     }
 
-    const user = await User.findById(decodedToken.id)
-    if (!user) {
-      return response.status(400).json({ error: 'User not found' })
-    }
+    const user = request.user
 
     const blog = await Blog.findById(request.params.id)
     if (!blog) {
